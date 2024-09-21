@@ -18,13 +18,23 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import BlurFade from "@/components/magicui/blur-fade";
+import { useEffect, useRef } from "react";
 
 export function SearchCommand() {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    inputRef.current!.focus();
+  }, []);
+
   return (
     <div className="fixed top-0 left-0 flex flex-row w-[100vw] h-[100vh] justify-center items-center backdrop-blur-md">
       <BlurFade className="max-w-[450px] max-h-[600px]">
         <Command className="rounded-lg border shadow-md min-w-[450px] min-h-[600px]">
-          <CommandInput placeholder="Type a command or search..." />
+          <CommandInput
+            ref={inputRef}
+            placeholder="Type a command or search..."
+          />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Suggestions">

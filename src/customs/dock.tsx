@@ -1,17 +1,13 @@
 "use client";
 
-import { open } from "@tauri-apps/plugin-shell";
-import { register } from "@tauri-apps/plugin-global-shortcut";
-
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import React from "react";
 import { CalendarIcon, HomeIcon, MailIcon, PlusIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Dock, DockIcon } from "@/components/magicui/dock";
-import { BorderBeam } from "@/components/magicui/border-beam";
+import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -92,8 +88,7 @@ const DATA = {
 
 export function DockDemo() {
   return (
-    <Dock className="h-16 ">
-      {/* {a ? <p>hi</p> : <p>bye</p>} */}
+    <Dock direction="middle">
       {DATA.navbar.map((item) => (
         <DockIcon key={item.label}>
           <Link
@@ -104,24 +99,27 @@ export function DockDemo() {
               "size-12 rounded-full"
             )}
           >
-            <item.icon className="size-4" />
+            <item.icon className="size-5" />
           </Link>
         </DockIcon>
       ))}
       <Separator orientation="vertical" className="h-full" />
       {Object.entries(DATA.contact.social).map(([name, social]) => (
         <DockIcon key={name}>
-          <div
+          <button
             // href={social.url}
             aria-label={social.name}
             className={cn(
               buttonVariants({ variant: "ghost", size: "icon" }),
               "size-12 rounded-full"
             )}
-            onClick={() => open(social.url)}
+            onClick={() => {
+              console.log("onclick", name);
+              // await open(social.url);
+            }}
           >
-            <social.icon className="size-4" />
-          </div>
+            <social.icon className="size-5" />
+          </button>
         </DockIcon>
       ))}
       {/* <Separator orientation="vertical" className="h-full py-2" />

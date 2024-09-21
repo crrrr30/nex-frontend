@@ -1,18 +1,25 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import { BorderBeam } from "@/components/magicui/border-beam";
+import DotPattern from "@/components/magicui/dot-pattern";
 import FlickeringGrid from "@/components/magicui/flickering-grid";
 import SparklesText from "@/components/magicui/sparkles-text";
 import { BentoDemo } from "@/customs/bento";
 import { SearchCommand } from "@/customs/command";
 import { DockDemo } from "@/customs/dock";
 import InlineCode from "@/customs/mine";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 export default function Home() {
   return (
     <>
+      <DotPattern
+        className={cn(
+          "[mask-image:radial-gradient(800px_circle_at_center,white,transparent)]"
+        )}
+      />
       <div>
-        <div className="flex flex-row justify-center my-48">
+        <div className="flex flex-row justify-center py-48">
           <div className="flex flex-col">
             <BlurFade delay={0.25} inView>
               <SparklesText text="Introducing nex" />
