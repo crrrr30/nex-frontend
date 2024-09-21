@@ -9,7 +9,7 @@ import InlineCode from "@/customs/mine";
 import { cn } from "@/lib/utils";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 export default function Home() {
   return (
@@ -31,7 +31,7 @@ export default function Home() {
                 <InlineCode>nex</InlineCode> is a next generation distributed
                 package manager.{" "}
                 <MyLink href="https://google.com/">hello world</MyLink>
-                <button
+                {/* <button
                   onClick={async () => {
                     const str: string = await invoke("my_custom_command", {
                       my_value: "Jon",
@@ -40,7 +40,7 @@ export default function Home() {
                   }}
                 >
                   <p>Click me</p>
-                </button>
+                </button> */}
               </p>
             </BlurFade>
           </div>
@@ -56,7 +56,7 @@ function MyLink({ href, children }: { href: string; children: ReactNode }) {
     <Link href={href} className="black-link group">
       <span>
         {children}
-        <ArrowRightIcon className="inline ml-1 group-hover:translate-x-12 transform-gpu" />
+        <ArrowRightIcon className="inline ml-1 group-hover:translate-x-1 transition-transform transform-gpu" />
       </span>
     </Link>
   );

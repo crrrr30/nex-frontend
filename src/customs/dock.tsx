@@ -1,8 +1,14 @@
 "use client";
 
 import React from "react";
-import { CalendarIcon, HomeIcon, MailIcon, PlusIcon } from "lucide-react";
-
+import {
+  ArrowLeftIcon,
+  CalendarIcon,
+  HomeIcon,
+  MailIcon,
+  PlusIcon,
+} from "lucide-react";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Dock, DockIcon } from "@/components/magicui/dock";
@@ -59,7 +65,7 @@ const Icons = {
 const DATA = {
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
-    { href: "lmfao", icon: PlusIcon, label: "Blog" },
+    { href: "/create-package", icon: PlusIcon, label: "Blog" },
   ],
   contact: {
     social: {
@@ -88,39 +94,86 @@ const DATA = {
 };
 
 export default function NexDock() {
-  return (
-    // <ShineBorder className="h-fit  p-0">
-    <Dock direction="middle" className="my-0">
-      {DATA.navbar.map((item) => (
-        <DockIcon key={item.label}>
+  const pathname = usePathname();
+  if (pathname == "/")
+    return (
+      <Dock direction="middle" className="my-0">
+        {DATA.navbar.map((item) => (
+          <DockIcon key={item.label}>
+            <Link
+              href={item.href}
+              aria-label={item.label}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "icon" }),
+                "size-12 rounded-full"
+              )}
+            >
+              <item.icon className="size-5" />
+            </Link>
+          </DockIcon>
+        ))}
+        <Separator orientation="vertical" className="h-full" />
+        {Object.entries(DATA.contact.social).map(([name, social]) => (
+          <DockIcon key={name}>
+            <button
+              aria-label={social.name}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "icon" }),
+                "size-12 rounded-full"
+              )}
+              onClick={async () => await open(social.url)}
+            >
+              <social.icon className="size-5" />
+            </button>
+          </DockIcon>
+        ))}
+      </Dock>
+    );
+  else
+    return (
+      <Dock direction="middle" className="my-0">
+        <DockIcon>
           <Link
-            href={item.href}
-            aria-label={item.label}
+            href="/"
+            aria-label="Back to Home"
             className={cn(
               buttonVariants({ variant: "ghost", size: "icon" }),
               "size-12 rounded-full"
             )}
           >
-            <item.icon className="size-5" />
+            <ArrowLeftIcon className="size-5" />
           </Link>
         </DockIcon>
-      ))}
-      <Separator orientation="vertical" className="h-full" />
-      {Object.entries(DATA.contact.social).map(([name, social]) => (
-        <DockIcon key={name}>
-          <button
-            aria-label={social.name}
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "icon" }),
-              "size-12 rounded-full"
-            )}
-            onClick={async () => await open(social.url)}
-          >
-            <social.icon className="size-5" />
-          </button>
-        </DockIcon>
-      ))}
-    </Dock>
-    // </ShineBorder>
-  );
+        <Separator orientation="vertical" className="h-full" />
+        {DATA.navbar.map((item) => (
+          <DockIcon key={item.label}>
+            <Link
+              href={item.href}
+              aria-label={item.label}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "icon" }),
+                "size-12 rounded-full"
+              )}
+            >
+              <item.icon className="size-5" />
+            </Link>
+          </DockIcon>
+        ))}
+        <Separator orientation="vertical" className="h-full" />
+        {Object.entries(DATA.contact.social).map(([name, social]) => (
+          <DockIcon key={name}>
+            <button
+              aria-label={social.name}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "icon" }),
+                "size-12 rounded-full"
+              )}
+              onClick={async () => await open(social.url)}
+            >
+              <social.icon className="size-5" />
+            </button>
+          </DockIcon>
+        ))}
+      </Dock>
+    );
 }
