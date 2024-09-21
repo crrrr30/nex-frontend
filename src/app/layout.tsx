@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { DockDemo } from "@/customs/dock";
+import NexDock from "@/customs/dock";
 import KeybindWrapper from "@/customs/keybind_wrapper";
 
 const geistSans = localFont({
@@ -33,7 +33,7 @@ export default function RootLayout({
         <KeybindWrapper>{children}</KeybindWrapper>
 
         <div className="fixed bottom-8 w-full flex flex-row justify-center">
-          <DockDemo />
+          <NexDock />
         </div>
         <div className="h-32" />
       </body>

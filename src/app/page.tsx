@@ -1,14 +1,11 @@
+"use client";
+
 import BlurFade from "@/components/magicui/blur-fade";
-import { BorderBeam } from "@/components/magicui/border-beam";
 import DotPattern from "@/components/magicui/dot-pattern";
-import FlickeringGrid from "@/components/magicui/flickering-grid";
 import SparklesText from "@/components/magicui/sparkles-text";
-import { BentoDemo } from "@/customs/bento";
-import { SearchCommand } from "@/customs/command";
-import { DockDemo } from "@/customs/dock";
+import { Bento } from "@/customs/bento";
 import InlineCode from "@/customs/mine";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -28,12 +25,15 @@ export default function Home() {
             <BlurFade delay={0.25 * 2} inView>
               <p className="text-lg">
                 <InlineCode>nex</InlineCode> is a next generation distributed
-                package manager.
+                package manager.{" "}
+                <button onClick={async () => await open("https://google.com/")}>
+                  Hi
+                </button>
               </p>
             </BlurFade>
           </div>
         </div>
-        <BentoDemo className="max-w-[80vw] mx-auto" />
+        <Bento className="max-w-[80vw] mx-auto h-[600px]" />
       </div>
     </>
   );
