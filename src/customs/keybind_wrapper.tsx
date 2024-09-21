@@ -13,6 +13,8 @@ export default function KeybindWrapper({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     (async () => {
+      return;
+
       if (await isRegistered("CmdOrControl+K")) {
         await unregister(["CommandOrControl+K", "Escape"]);
       }

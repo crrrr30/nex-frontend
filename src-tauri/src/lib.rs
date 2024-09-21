@@ -1,3 +1,16 @@
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+struct MyCustomStruct {
+    my_value: String,
+}
+
+#[tauri::command(rename_all = "snake_case")]
+fn my_custom_command(my_value: String) -> MyCustomStruct {
+    println!("{} was invoked from JS!", my_value);
+    MyCustomStruct {
+        my_value: format!("{} was invoked from JS!", my_value),
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -13,6 +26,7 @@ pub fn run() {
             }
             Ok(())
         })
+        .invoke_handler(tauri::generate_handler![my_custom_command])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

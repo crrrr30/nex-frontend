@@ -67,3 +67,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+.black-link {
+  text-decoration: none;
+  background: linear-gradient(to right, black, black);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 400ms;
+}
+.black-link:hover,
+.black-link:focus {
+  background-size: 80% 1px;
+}
