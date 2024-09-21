@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { DockDemo } from "@/customs/dock";
+import KeybindWrapper from "@/customs/keybind_wrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,9 +28,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
       >
-        {children}
+        <KeybindWrapper>{children}</KeybindWrapper>
+
+        <div className="fixed bottom-8 w-full flex flex-row justify-center">
+          <DockDemo />
+        </div>
+        <div className="h-32" />
       </body>
     </html>
   );
