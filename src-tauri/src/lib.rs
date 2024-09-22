@@ -110,6 +110,7 @@ pub fn run() {
         tauri::async_runtime::block_on(nex_client::get_client(Some(socket), None)).unwrap();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_clipboard_manager::init())
         .manage(NexFrontendState(client))
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())

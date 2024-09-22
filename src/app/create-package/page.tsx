@@ -10,9 +10,12 @@ import { FileTree, PackageFile } from "./file_tree";
 import NexLink from "@/customs/link";
 import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { invoke } from "@tauri-apps/api/core";
-import GradientCard from "@/customs/gradient_card";
+import { useToast } from "@/hooks/use-toast";
+// import { useToast } from "@/hooks/use-toast";
 
 export default function CreatePackage() {
+  const { toast } = useToast();
+
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState(false);
 
@@ -51,12 +54,17 @@ export default function CreatePackage() {
 
     if (abort) return;
 
-    invoke("create_package", {
+    const result: string = await invoke("create_package", {
       name,
       version,
       description,
       packageDir,
       selectedFiles,
+    });
+
+    toast({
+      // title: "Scheduled: Catch up",
+      description: "Package created",
     });
   }
 
