@@ -15,6 +15,13 @@ import { Dock, DockIcon } from "@/components/magicui/dock";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { open } from "@tauri-apps/plugin-shell";
+import { TextAlignLeftIcon } from "@radix-ui/react-icons";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -65,7 +72,8 @@ const Icons = {
 const DATA = {
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
-    { href: "/create-package", icon: PlusIcon, label: "Blog" },
+    { href: "/list-packages", icon: TextAlignLeftIcon, label: "List" },
+    { href: "/create-package", icon: PlusIcon, label: "Create" },
   ],
   contact: {
     social: {
@@ -94,22 +102,28 @@ const DATA = {
 };
 
 export default function NexDock() {
-  const pathname = usePathname();
-  if (pathname == "/")
-    return (
-      <Dock direction="middle" className="my-0">
+  return (
+    <TooltipProvider>
+      <Dock direction="middle" className="my-0 pointer-events-auto">
         {DATA.navbar.map((item) => (
           <DockIcon key={item.label}>
-            <Link
-              href={item.href}
-              aria-label={item.label}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "size-12 rounded-full"
-              )}
-            >
-              <item.icon className="size-5" />
-            </Link>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href={item.href}
+                  aria-label={item.label}
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "icon" }),
+                    "size-12 rounded-full"
+                  )}
+                >
+                  <item.icon className="size-5" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{item.label}</p>
+              </TooltipContent>
+            </Tooltip>
           </DockIcon>
         ))}
         <Separator orientation="vertical" className="h-full" />
@@ -128,52 +142,6 @@ export default function NexDock() {
           </DockIcon>
         ))}
       </Dock>
-    );
-  else
-    return (
-      <Dock direction="middle" className="my-0">
-        <DockIcon>
-          <Link
-            href="/"
-            aria-label="Back to Home"
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "icon" }),
-              "size-12 rounded-full"
-            )}
-          >
-            <ArrowLeftIcon className="size-5" />
-          </Link>
-        </DockIcon>
-        <Separator orientation="vertical" className="h-full" />
-        {DATA.navbar.map((item) => (
-          <DockIcon key={item.label}>
-            <Link
-              href={item.href}
-              aria-label={item.label}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "size-12 rounded-full"
-              )}
-            >
-              <item.icon className="size-5" />
-            </Link>
-          </DockIcon>
-        ))}
-        <Separator orientation="vertical" className="h-full" />
-        {Object.entries(DATA.contact.social).map(([name, social]) => (
-          <DockIcon key={name}>
-            <button
-              aria-label={social.name}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "size-12 rounded-full"
-              )}
-              onClick={async () => await open(social.url)}
-            >
-              <social.icon className="size-5" />
-            </button>
-          </DockIcon>
-        ))}
-      </Dock>
-    );
+    </TooltipProvider>
+  );
 }
