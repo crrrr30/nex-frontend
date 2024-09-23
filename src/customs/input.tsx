@@ -1,21 +1,17 @@
 import { cn } from "@/lib/utils";
-import { ChangeEventHandler } from "react";
 
 export default function Input({
   icon,
   placeholder,
-  value,
-  onChange,
-  onSubmit: submit,
+  onSubmit,
   error = false,
+  ...props
 }: {
   icon?: React.ReactNode;
   placeholder?: string;
-  value?: string;
-  onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
   onSubmit?: () => void;
   error?: boolean;
-}) {
+} & React.InputHTMLAttributes<HTMLInputElement>) {
   const className = cn(
     "border-b transition-colors flex items-center p-2 grow",
     error ? "border-b-red-500" : "has-[:focus]:border-b-black"
@@ -26,9 +22,10 @@ export default function Input({
       <input
         className="bg-transparent border-none outline-none w-full"
         placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        onKeyDown={submit ? (e) => e.key === "Enter" && submit() : undefined}
+        {...props}
+        onKeyDown={
+          onSubmit ? (e) => e.key === "Enter" && onSubmit() : undefined
+        }
       />
     </div>
   );

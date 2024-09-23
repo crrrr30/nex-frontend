@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { File, Folder, Tree } from "@/components/magicui/file-tree";
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import NexLink from "@/customs/link";
@@ -12,6 +12,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Input from "@/customs/input";
+import { toast } from "sonner";
+import { MagicCard } from "@/components/magicui/magic-card";
 
 export interface PackageFile {
   path: string;
@@ -27,40 +29,37 @@ interface FileTreeNode {
 }
 
 export function FileTree({
+  baseDir: base_dir,
   paths,
   setPaths,
 }: {
+  baseDir: string;
   paths: PackageFile[];
   setPaths: Dispatch<SetStateAction<PackageFile[]>>;
 }) {
+  const [installPathEdits, setInstallPathEdits] = useState<{
+    [key: string]: string;
+  }>({});
+  const [editing, setEditing] = useState<string | undefined>();
+
+  useEffect(() => {
+    setInstallPathEdits(
+      Object.fromEntries(paths.map((p) => [p.path, p.installPath ?? ""]))
+    );
+  }, [paths]);
+
   const filePaths = paths.map((p) => p.path);
-  console.log("Rebuilding with paths", filePaths);
 
-  // Compute the longest common prefix
-  const commonPrefix = getCommonPathPrefix(filePaths);
-
-  // Strip the common prefix from each path
+  const commonPrefix = base_dir + "/";
   const relativePaths = filePaths.map((path) =>
     path.startsWith(commonPrefix) ? path.substring(commonPrefix.length) : path
   );
 
   // Build the tree using the relative paths
-  const elements = buildTree(relativePaths, filePaths);
-
-  // Collect folder IDs for initial expansion if needed
-  const folderIds: string[] = [];
-
-  function collectFolderIds(node: FileTreeNode) {
-    if (!node.isFile) {
-      folderIds.push(node.id);
-      node.children.forEach(collectFolderIds);
-    }
-  }
-
-  elements.forEach(collectFolderIds);
+  const { rootNodes: elements, maxId } = buildTree(relativePaths, filePaths);
 
   function renderTree(node: FileTreeNode) {
-    const [installPath, setInstallPath] = useState("");
+    const installPath = installPathEdits[node.path];
     const finalInstallPath = paths.filter((p) => p.path == node.path)[0]
       .installPath;
 
@@ -68,15 +67,11 @@ export function FileTree({
 
     if (node.isFile) {
       return (
-        <div
-          className="flex hover:cursor-pointer"
-          onClick={() => {
-            console.log("Hi from node", node);
-          }}
-        >
+        <div className="flex">
           <Popover
+            open={node.path === editing}
             onOpenChange={(isOpen) => {
-              console.log("Popover for node", node, "is now", isOpen);
+              setEditing(node.path);
               if (!isOpen) {
                 setPaths(
                   paths.map((p) =>
@@ -107,9 +102,19 @@ export function FileTree({
             </PopoverTrigger>
             <PopoverContent align="start">
               <Input
+                id={node.path}
                 placeholder={"Install Path"}
                 value={installPath}
-                onChange={(e) => setInstallPath(e.target.value)}
+                onChange={(e) =>
+                  setInstallPathEdits({
+                    ...installPathEdits,
+                    [node.path]: e.target.value,
+                  })
+                }
+                onSubmit={() => {
+                  document.getElementById(node.path)?.blur();
+                  setEditing(undefined);
+                }}
               />
             </PopoverContent>
           </Popover>
@@ -134,8 +139,8 @@ export function FileTree({
   }
 
   return (
-    <div className="relative flex w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
-      <div className="w-full flex pl-4 py-4">
+    <div className="relative flex w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background bg-opacity-50 backdrop-blur-sm">
+      <MagicCard className="w-full px-4 py-4">
         <NexLink
           icon={PlusIcon}
           onClick={async () => {
@@ -145,6 +150,21 @@ export function FileTree({
             });
 
             if (!selected) return;
+
+            let failed = false;
+            for (const path of selected) {
+              if (!path.startsWith(base_dir)) {
+                toast(
+                  `The path "${
+                    path.split("/")[path.split("/").length - 1]
+                  }" is not in the project directory. From ${selected.join(
+                    ", "
+                  )}`
+                );
+                failed = true;
+              }
+            }
+            if (failed) return;
 
             setPaths((paths) =>
               [
@@ -156,39 +176,19 @@ export function FileTree({
         >
           Add Files
         </NexLink>
-      </div>
-      {paths.length > 0 && (
-        <Tree
-          className="p-2 overflow-hidden rounded-md bg-background"
-          initialExpandedItems={folderIds}
-          elements={elements}
-        >
-          {elements.map((element) => renderTree(element))}
-        </Tree>
-      )}
+        <div className="h-6" />
+        {paths.length > 0 && (
+          <Tree
+            initialExpandedItems={Array(maxId).map((_, i) =>
+              (i + 1).toString()
+            )}
+          >
+            {elements.map((element) => renderTree(element))}
+          </Tree>
+        )}
+      </MagicCard>
     </div>
   );
-}
-
-function getCommonPathPrefix(paths: string[]) {
-  if (!paths || paths.length === 0) return "";
-
-  // Split each path into its components
-  const splitPaths = paths.map((path) => path.split("/"));
-  const minLen = Math.min(...splitPaths.map((parts) => parts.length));
-  const commonParts = [];
-
-  // Find the common prefix
-  for (let i = 0; i < minLen; i++) {
-    const part = splitPaths[0][i];
-    if (splitPaths.every((parts) => parts[i] === part)) {
-      commonParts.push(part);
-    } else {
-      break;
-    }
-  }
-
-  return commonParts.length > 0 ? commonParts.join("/") + "/" : "";
 }
 
 function buildTree(paths: string[], allPaths: string[]) {
@@ -233,33 +233,5 @@ function buildTree(paths: string[], allPaths: string[]) {
     }
   }
 
-  // Collapse nodes with only one child
-  collapseSingleChildFolders(rootNodes);
-
-  console.log(rootNodes);
-  return rootNodes;
-}
-
-function collapseSingleChildFolders(nodes: FileTreeNode[], level = 0) {
-  for (let i = 0; i < nodes.length; i++) {
-    const node = nodes[i];
-
-    if (!node.isFile) {
-      if (
-        node.children.length === 1 &&
-        !node.children[0].isFile &&
-        level > 0 // Only collapse beyond the root level
-      ) {
-        // Collapse the child into the parent
-        node.name = node.name + "/" + node.children[0].name;
-        node.id = node.id; // Keep the parent's ID
-        node.children = node.children[0].children;
-        // Repeat the process in case there are multiple single-child folders
-        collapseSingleChildFolders([node], level);
-      } else {
-        // Recurse into children
-        collapseSingleChildFolders(node.children, level + 1);
-      }
-    }
-  }
+  return { rootNodes, maxId: idCounter - 1 };
 }

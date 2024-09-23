@@ -71,11 +71,13 @@ export default function ListPackages() {
       <div className="h-8" />
       <BlurFade delay={0.25 * 3} inView>
         {packages ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {packages.map((pkg) => (
-              <PackageCard pkg={pkg} />
-            ))}
-          </div>
+          <BlurFade delay={0.25} inView>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {packages.map((pkg) => (
+                <PackageCard pkg={pkg} />
+              ))}
+            </div>
+          </BlurFade>
         ) : (
           <div className="w-full h-full flex flex-col justify-center items-center">
             <lottie-player

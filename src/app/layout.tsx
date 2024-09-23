@@ -4,7 +4,7 @@ import NexDock from "@/customs/dock";
 import KeybindWrapper from "@/customs/keybind_wrapper";
 import DotPattern from "@/components/magicui/dot-pattern";
 import { cn } from "@/lib/utils";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",

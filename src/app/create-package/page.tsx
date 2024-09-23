@@ -10,12 +10,9 @@ import { FileTree, PackageFile } from "./file_tree";
 import NexLink from "@/customs/link";
 import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { invoke } from "@tauri-apps/api/core";
-import { useToast } from "@/hooks/use-toast";
-// import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export default function CreatePackage() {
-  const { toast } = useToast();
-
   const [name, setName] = useState<string>("");
   const [nameError, setNameError] = useState(false);
 
@@ -28,6 +25,21 @@ export default function CreatePackage() {
   const [packageDirError, setPackageDirError] = useState(false);
 
   const [selectedFiles, setSelectedFiles] = useState<PackageFile[]>([]);
+
+  function clearPage() {
+    setName("");
+    setNameError(false);
+
+    setVersion("");
+    setVersionError(false);
+
+    setDescription("");
+
+    setPackageDir(undefined);
+    setPackageDirError(false);
+
+    setSelectedFiles([]);
+  }
 
   async function handleSubmit() {
     let abort = false;
@@ -62,10 +74,8 @@ export default function CreatePackage() {
       selectedFiles,
     });
 
-    toast({
-      // title: "Scheduled: Catch up",
-      description: "Package created",
-    });
+    toast("Package created");
+    clearPage();
   }
 
   return (
@@ -114,7 +124,10 @@ export default function CreatePackage() {
                 const selected = await open({
                   directory: true,
                 });
-                if (selected) setPackageDir(selected);
+                if (selected) {
+                  setPackageDir(selected);
+                  setSelectedFiles([]);
+                }
               }}
               error={packageDirError}
             >
@@ -128,13 +141,18 @@ export default function CreatePackage() {
           <>
             <div className="h-6" />
 
-            <FileTree paths={selectedFiles} setPaths={setSelectedFiles} />
+            <FileTree
+              baseDir={packageDir}
+              paths={selectedFiles}
+              setPaths={setSelectedFiles}
+            />
           </>
         )}
 
-        {/* <GradientCard>
-          <div className="h-8" />
-        </GradientCard> */}
+        {/* <div className="h-8" />
+        <h1>My tree:</h1>
+        <div className="h-8" />
+        <MyTree /> */}
 
         <div className="h-8" />
 

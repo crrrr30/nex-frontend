@@ -1,6 +1,5 @@
 "use client";
 
-import SparklesText from "@/components/magicui/sparkles-text";
 import { useState } from "react";
 import Input from "@/customs/input";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
@@ -15,8 +14,7 @@ export default function TopBar() {
 
   return (
     <div className="flex justify-between items-center py-16">
-      <p className="text-xl font-bold" children="nex" />
-      {/* <SparklesText text="nex" className="text-xl" sparklesCount={4} /> */}
+      <p className="text-xl font-bold">nex</p>
       <div className="w-12" />
       <Input
         icon={<MagnifyingGlassIcon className="size-5" />}

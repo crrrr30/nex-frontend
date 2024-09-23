@@ -1,14 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  ArrowLeftIcon,
-  CalendarIcon,
-  HomeIcon,
-  MailIcon,
-  PlusIcon,
-} from "lucide-react";
-import { usePathname } from "next/navigation";
+import { CalendarIcon, HomeIcon, MailIcon, PlusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Dock, DockIcon } from "@/components/magicui/dock";
@@ -84,17 +77,12 @@ const DATA = {
       },
       LinkedIn: {
         name: "LinkedIn",
-        url: "#",
+        url: "https://www.linkedin.com/in/jonathan-cui-110b211a6",
         icon: Icons.linkedin,
-      },
-      X: {
-        name: "X",
-        url: "#",
-        icon: Icons.x,
       },
       email: {
         name: "Send Email",
-        url: "#",
+        url: "mailto:jonathancui03@gmail.com",
         icon: Icons.email,
       },
     },

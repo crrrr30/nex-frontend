@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import Link from "next/link";
 // import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { IconProps } from "@radix-ui/react-icons/dist/types";
@@ -25,7 +24,7 @@ export default function NexLink({
 }) {
   const iconClassName = cn(
     error ? "text-red-500" : "",
-    "inline ml-1 mb-1 group-hover:translate-x-1 transition-transform transform-gpu size-4"
+    "inline ml-1 mb-1 group-hover:translate-x-1 transition-transform transform-gpu duration-500 size-4"
   );
   const linkClassName = cn(
     error ? "error-link" : "black-link",
