@@ -80,23 +80,17 @@ async fn list_packages(
         let name = package.get_name(&client.iroh).await.unwrap();
 
         if let Some(name) = name {
-            let description = package
-                .get_description(&client.iroh)
-                .await
-                .unwrap()
-                .unwrap();
-            let version = package
-                .get_latest_version_meta(&client.iroh)
-                .await
-                .unwrap()
-                .unwrap();
-
-            package_list.push(PackageDTO {
-                name,
-                version,
-                description,
-                ticket: package.share().await.unwrap().0.to_string(),
-            })
+            if let Some(description) = package.get_description(&client.iroh).await.unwrap() {
+                if let Some(version) = package.get_latest_version_meta(&client.iroh).await.unwrap()
+                {
+                    package_list.push(PackageDTO {
+                        name,
+                        version,
+                        description,
+                        ticket: package.share().await.unwrap().0.to_string(),
+                    })
+                }
+            }
         }
     }
 

@@ -12,6 +12,18 @@ export default function KeybindWrapper({ children }: { children: ReactNode }) {
   const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
+    const keyDownHandler: Parameters<
+      typeof document.addEventListener<"keydown">
+    >[1] = (e) => console.log(`You pressed ${e.code}.`);
+    document.addEventListener("keydown", keyDownHandler);
+
+    // clean up
+    return () => {
+      document.removeEventListener("keydown", keyDownHandler);
+    };
+  }, []);
+
+  useEffect(() => {
     (async () => {
       return;
 

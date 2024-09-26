@@ -1,23 +1,23 @@
 "use client";
 
 import React from "react";
-
 import { cn } from "@/lib/utils";
-
 import { useState, useRef } from "react";
+import { motion } from "framer-motion";
 
 interface MagicCardProps {
   children?: React.ReactNode;
   className?: string;
+  gradientBlobSize?: number;
 }
 
 export const MagicCard: React.FC<MagicCardProps> = ({
   children,
   className = "",
+  gradientBlobSize = 256,
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
-  console.log("hovered", hovered);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -41,22 +41,24 @@ export const MagicCard: React.FC<MagicCardProps> = ({
       {/* Gradient blob */}
       <div
         className={cn(
-          hovered ? "opacity-20" : "opacity-0",
+          hovered ? "opacity-10" : "opacity-0",
           "transition-opacity duration-300"
         )}
       >
-        <div
-          className="absolute w-64 h-64 rounded-full bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 blur-2xl opacity-60 pointer-events-none transition-transform duration-300 ease-out"
+        <motion.div
+          className="absolute rounded-full bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 blur-2xl"
           style={{
-            transform: `translate(${position.x - 128}px, ${
-              position.y - 128
-            }px)`,
+            width: gradientBlobSize,
+            height: gradientBlobSize,
+          }}
+          animate={{
+            translateX: position.x - gradientBlobSize / 2,
+            translateY: position.y - gradientBlobSize / 2,
           }}
         />
       </div>
-
       {/* Card content */}
-      <div className={`relative z-10 h-full`}>{children}</div>
+      <div className={`relative z-10 h-full`}>{children}</div>{" "}
     </div>
   );
 };

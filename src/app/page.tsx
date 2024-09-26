@@ -3,12 +3,14 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import SparklesText from "@/components/magicui/sparkles-text";
 import { Bento } from "@/customs/bento";
-import InlineCode from "@/customs/inline_code";
+import { open } from "@tauri-apps/plugin-shell";
+
+import NexLink from "@/customs/link";
 
 export default function Home() {
   return (
-    <>
-      <div className="flex flex-row justify-center py-48">
+    <div className="py-24 max-w-[80vw] mx-auto">
+      <div className="flex flex-row justify-center">
         <div className="flex flex-col">
           <BlurFade delay={0.25} inView>
             <SparklesText text="Introducing nex" />
@@ -16,13 +18,36 @@ export default function Home() {
           <div className="h-8" />
           <BlurFade delay={0.25 * 2} inView>
             <p className="text-lg">
-              <InlineCode>nex</InlineCode> is a next generation distributed
-              package manager.
+              <NexLink
+                onClick={async () => await open("https://www.nexinaction.com/")}
+              >
+                <span className="font-bold">nex</span>
+              </NexLink>{" "}
+              is a next generation distributed package manager.
             </p>
           </BlurFade>
         </div>
       </div>
-      <Bento className="max-w-[80vw] mx-auto h-[600px]" />
-    </>
+      <div className="h-24" />
+      <Bento />
+      <div className="h-24" />
+      <div>
+        <p className="text-lg">
+          <span className="font-bold">nex</span> is an{" "}
+          <NexLink
+            onClick={async () => await open("https://github.com/cab7390/nex")}
+          >
+            open-source
+          </NexLink>{" "}
+          project build on top of{" "}
+          <NexLink onClick={async () => await open("iroh.computer/")}>
+            Iroh
+          </NexLink>{" "}
+          by <NexLink onClick={() => {}}>Christian Bowman</NexLink>,{" "}
+          <NexLink onClick={() => {}}>David Araujo</NexLink>, and{" "}
+          <NexLink onClick={() => {}}>Jonathan Cui</NexLink>.
+        </p>
+      </div>
+    </div>
   );
 }

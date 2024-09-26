@@ -1,10 +1,12 @@
+import { MagicCard } from "@/components/magicui/magic-card";
+import { cn } from "@/lib/utils";
 import {
+  ArrowRightIcon,
   CubeIcon,
   DownloadIcon,
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
-
-import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
+import NexLink from "./link";
 
 const features = [
   {
@@ -14,8 +16,6 @@ const features = [
     href: "/create-package",
     cta: "Let's Go!",
     background: <img className="absolute -right-20 -top-20 opacity-60" />,
-    // className: "row-start-1 row-end-3 col-start-1 col-end-2",
-    className: "row-start-1 row-end-3 col-start-1 col-end-2",
   },
   {
     Icon: MagnifyingGlassIcon,
@@ -25,8 +25,6 @@ const features = [
     href: "/",
     cta: "Learn more",
     background: <img className="absolute -right-20 -top-20 opacity-60" />,
-    // className: "row-start-3 row-end-5 col-start-1 col-end-2",
-    className: "row-start-1 row-end-3 col-start-2 col-end-3",
   },
   {
     Icon: DownloadIcon,
@@ -35,18 +33,30 @@ const features = [
     href: "/install-package",
     cta: "Download Now",
     background: <img className="absolute -right-20 -top-20 opacity-60" />,
-    // className: "row-start-3 row-end-5 col-start-1 col-end-2",
-    className: "row-start-1 row-end-3 col-start-3 col-end-4",
   },
 ];
 
 export function Bento({ className, ...props }: { className?: string }) {
-  <p className="row-end"> </p>;
   return (
-    <BentoGrid className={`grid-rows-4 ${className}`} {...props}>
+    <div className={cn("flex flex-row justify-between", className)}>
       {features.map((feature) => (
-        <BentoCard key={feature.name} {...feature} />
+        <MagicCard className="group h-72 w-[25vw] border rounded-xl px-4 py-6 backdrop-blur-sm">
+          <div className="flex flex-col h-full justify-between">
+            <div className="group-hover:-translate-y-2 duration-300">
+              <div className="h-8" />
+              <feature.Icon className="size-8" />
+              <div className="h-6" />
+              <p className="text-xl font-bold max-w-[75%]">{feature.name}</p>
+            </div>
+            <div className="grow" />
+            <div>
+              <div className="inline-block opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 bg-gray-100 rounded-lg text-sm">
+                <NexLink onClick={() => {}}>{feature.cta}</NexLink>
+              </div>
+            </div>
+          </div>
+        </MagicCard>
       ))}
-    </BentoGrid>
+    </div>
   );
 }

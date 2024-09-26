@@ -151,7 +151,7 @@ function PackageCard({ pkg }: { pkg: Package }) {
   }, [isOpen]);
 
   return (
-    <MagicCard className="bg-opacity-50 rounded-md border p-4 backdrop-blur-sm">
+    <MagicCard className="bg-opacity-50 rounded-xl border p-4 backdrop-blur-sm">
       <p className="font-bold flex justify-between items-center">
         {pkg.name}{" "}
         <InlineCode className="text-sm">v{pkg.version.version}</InlineCode>

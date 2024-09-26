@@ -17,8 +17,7 @@ export default function NexLink({
     IconProps & React.RefAttributes<SVGSVGElement>
   >;
   onClick?: () => void;
-  children: string;
-  // children: ReactNode;
+  children: React.ReactNode;
   className?: string;
   error?: boolean;
 }) {
@@ -28,7 +27,7 @@ export default function NexLink({
   );
   const linkClassName = cn(
     error ? "error-link" : "black-link",
-    "group",
+    "group mr-1",
     className
   );
 

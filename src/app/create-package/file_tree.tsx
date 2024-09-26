@@ -71,12 +71,27 @@ export function FileTree({
           <Popover
             open={node.path === editing}
             onOpenChange={(isOpen) => {
-              setEditing(node.path);
+              if (!isOpen) {
+                document.getElementById(node.path)?.blur();
+              }
+              setEditing(isOpen ? node.path : undefined);
+
               if (!isOpen) {
                 setPaths(
-                  paths.map((p) =>
-                    p.path === node.path ? { path: p.path, installPath } : p
-                  )
+                  paths.map((p) => {
+                    console.log(
+                      "installPath.endsWith('/')",
+                      installPath.endsWith("/")
+                    );
+                    return p.path === node.path
+                      ? {
+                          path: p.path,
+                          installPath: installPath.endsWith("/")
+                            ? installPath + node.name
+                            : installPath,
+                        }
+                      : p;
+                  })
                 );
               }
             }}
@@ -112,7 +127,18 @@ export function FileTree({
                   })
                 }
                 onSubmit={() => {
-                  document.getElementById(node.path)?.blur();
+                  setPaths(
+                    paths.map((p) =>
+                      p.path === node.path
+                        ? {
+                            path: p.path,
+                            installPath: installPath.endsWith("/")
+                              ? installPath + node.name
+                              : installPath,
+                          }
+                        : p
+                    )
+                  );
                   setEditing(undefined);
                 }}
               />
@@ -179,9 +205,9 @@ export function FileTree({
         <div className="h-6" />
         {paths.length > 0 && (
           <Tree
-            initialExpandedItems={Array(maxId).map((_, i) =>
-              (i + 1).toString()
-            )}
+            initialExpandedItems={Array(maxId)
+              .fill("")
+              .map((_, i) => (i + 1).toString())}
           >
             {elements.map((element) => renderTree(element))}
           </Tree>
